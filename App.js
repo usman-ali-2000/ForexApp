@@ -1,6 +1,6 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { NavigationContainer } from '@react-navigation/native';
+import React, { useCallback, useEffect, useState } from 'react'
+import { NavigationContainer, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './src/screens/Home/Index';
 import Detail from './src/screens/Detail/Index';
@@ -49,41 +49,68 @@ const handleLogout = async () => {
 }
 
 const MyDrawer = () => {
+
+  const [mode, setMode] = useState(null);
+
+  const handleMode = async () => {
+    try {
+      const currentMode = await AsyncStorage.getItem('mode');
+      if (currentMode === 'dark') {
+        await AsyncStorage.setItem('mode', 'light');
+        setMode('light');
+      } else {
+        await AsyncStorage.setItem('mode', 'dark');
+        setMode('dark');
+      }
+    } catch (error) {
+      console.error('Error handling mode change:', error);
+    }
+  };
+
+  const fetchMode = async () => {
+    try {
+      const getMode = await AsyncStorage.getItem('mode');
+      setMode(getMode);
+    } catch (error) {
+      console.error('Error fetching mode:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMode();
+  }, []);
+
   return (
     <Drawer.Navigator
       initialRouteName="Home"
       screenOptions={{
         drawerStyle: {
-          backgroundColor: theme.colors.darkYellow,
+          backgroundColor: mode === 'dark' ? theme.colors.black : theme.colors.white,
         },
       }}
       drawerContent={({ navigation }) => (
         <>
-          <View style={{ flexDirection: 'row', alignItems: 'center', margin: '5%', height: 100 }}>
-            <TouchableOpacity onPress={() => navigation.navigate('Home')} style={{ borderWidth: 2, borderColor: theme.colors.red, borderRadius: 100, flexDirection: 'row', height: 52, width: 52, alignItems: 'center', justifyContent: 'center' }}>
-              <Image style={{ height: 48, width: 48, borderRadius: 100, padding: 2 }} source={require('./src/assets/images/user.png')} />
-            </TouchableOpacity>
-            <View style={{ marginLeft: '5%', marginTop: '2%' }}>
-              <Text style={{ fontSize: 18, fontFamily: 'Gilroy-Bold', color: theme.colors.white }}>Niaz Ahmed</Text>
-              <Text style={{ fontSize: 14, fontFamily: 'Gilroy-SemiBold', color: theme.colors.red }}>Level 0</Text>
-            </View>
+          <View style={{ alignItems: 'center', padding: '5%', height: 100, backgroundColor: theme.colors.darkRed }}>
+            <Text style={{ fontSize: 20, fontFamily: 'Gilroy-Bold', color: mode === 'dark' ? theme.colors.black : theme.colors.white, paddingTop: '5%' }}>Candlesticks</Text>
+            <Text style={{ fontSize: 12, fontFamily: 'Gilroy-Regular', color: mode === 'dark' ? theme.colors.black : theme.colors.white, textAlign: 'center' }}>(Under stand Candlestick patterns)</Text>
           </View>
           <View style={{ width: '100%', alignItems: 'center', borderTopWidth: 0, borderBottomWidth: 0, borderColor: theme.colors.white }}>
-            <TouchableOpacity onPress={() => navigation.navigate('Wallet')} style={{ flexDirection: 'row', alignItems: 'center', width: '100%', padding: '5%', }}>
-              <MaterialIcon name="wallet" size={26} color={theme.colors.white} />
-              <Text style={{ fontSize: 16, color: theme.colors.white, marginLeft: '5%', fontFamily: 'Gilroy-SemiBold' }}>Wallet</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('ForexHome')} style={{ flexDirection: 'row', alignItems: 'center', width: '100%', padding: '5%', marginTop: '5%' }}>
+              <MaterialIcon name="home" size={26} color={theme.colors.darkRed} />
+              <Text style={{ fontSize: 16, color: theme.colors.darkRed, marginLeft: '5%', fontFamily: 'Gilroy-SemiBold' }}>Home</Text>
             </TouchableOpacity>
-            {/* <TouchableOpacity onPress={() => navigation.navigate('Wallet')} style={{ flexDirection: 'row', alignItems: 'center', width: '100%', padding: '5%', }}>
-              <MaterialIcon name="info" size={26} color={theme.colors.grey} />
-              <Text style={{ fontSize: 16, color: theme.colors.white, marginLeft: '5%', fontFamily: 'Gilroy-SemiBold' }}>Info</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Terms')} style={{ flexDirection: 'row', alignItems: 'center', width: '100%', padding: '5%', marginTop: '2%' }}>
+              <MaterialIcon name="speaker" size={26} color={theme.colors.darkRed} />
+              <Text style={{ fontSize: 16, color: theme.colors.darkRed, marginLeft: '5%', fontFamily: 'Gilroy-SemiBold' }}>Terms & Conditions</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('PrivacyPolicy')} style={{ flexDirection: 'row', alignItems: 'center', width: '100%', padding: '5%', marginTop: '2%' }}>
+              <MaterialIcon name="policy" size={26} color={theme.colors.darkRed} />
+              <Text style={{ fontSize: 16, color: theme.colors.darkRed, marginLeft: '5%', fontFamily: 'Gilroy-SemiBold' }}>Privacy Policy</Text>
+            </TouchableOpacity>
+            {/* <TouchableOpacity onPress={handleMode} style={{ flexDirection: 'row', alignItems: 'center', width: '100%', padding: '5%', marginTop: '2%' }}>
+              <MaterialIcon name="light" size={26} color={theme.colors.darkRed} />
+              <Text style={{ fontSize: 16, color: theme.colors.darkRed, marginLeft: '5%', fontFamily: 'Gilroy-SemiBold' }}>Dark Mode</Text>
             </TouchableOpacity> */}
-            <TouchableOpacity onPress={async () => {
-              await AsyncStorage.removeItem("id");
-              await navigation.replace("Login");
-            }} style={{ flexDirection: 'row', alignItems: 'center', width: '100%', padding: '5%', }}>
-              <MaterialIcon name="logout" size={22} color={theme.colors.red} />
-              <Text style={{ fontSize: 16, color: theme.colors.red, marginLeft: '5%', fontFamily: 'Gilroy-Bold' }}>Logout</Text>
-            </TouchableOpacity>
           </View>
         </>
       )}
@@ -103,14 +130,13 @@ const MyDrawer = () => {
             // width:'100%', 
           },
         }}
-        name="Home" component={BottomNav}
+        name="ForexHome" component={ForexHome}
       />
     </Drawer.Navigator>
   );
 };
 
 const App = () => {
-
 
   return (
     <NavigationContainer>
@@ -141,7 +167,7 @@ const App = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name='Home'
+          name='Drawer'
           component={MyDrawer}
           options={{ headerShown: false }}
         />
@@ -230,11 +256,11 @@ const App = () => {
           component={Settings}
           options={{ headerShown: false }}
         /> */}
-        {/* <Stack.Screen
+        <Stack.Screen
           name='PrivacyPolicy'
           component={PriavcyPolicy}
           options={{ headerShown: false }}
-        /> */}
+        />
         {/* <Stack.Screen
           name='Terms'
           component={Terms}

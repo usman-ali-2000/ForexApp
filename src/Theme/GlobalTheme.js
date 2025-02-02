@@ -1,4 +1,6 @@
 import { Platform } from "react-native";
+import { getMode } from "../assets/Data";
+
 
 const theme = {
     colors: {
@@ -14,10 +16,10 @@ const theme = {
         darkYellow: '#FFBF00',
         lightyYellow: '#FFEA00',
         midYellow: '#FDDA0D',
-        lightPink:'rgb(248, 200, 220)',
-        purple:'purple',
-        cerise:'rgb(222, 49, 99)',
-        darkRed:'rgb(165, 42, 42)',
+        lightPink: 'rgb(248, 200, 220)',
+        purple: 'purple',
+        cerise: 'rgb(222, 49, 99)',
+        darkRed: 'rgb(165, 42, 42)',
     },
     fonts: {
         bold: 'Gilroy-Bold',

@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState } from "react";
 import { Alert, Image, Linking } from "react-native";
 
 export const BaseUrl = "https://book-shop-api-sage.vercel.app";
@@ -89,6 +90,46 @@ export const addAttempt = async (attempt, date) => {
     }
 };
 
+export let passMode = true;
+
+export const getMode = async () => {
+    try {
+        const mode = await AsyncStorage.getItem('mode');
+        console.log('Mode:', mode);
+        if (mode) {
+            passMode = mode;
+            return mode;
+        } else {
+            passMode = false;
+            return false;
+        }
+    } catch (error) {
+        console.error('Error retrieving mode:', error);
+    }
+};
+
+
+export const useTheme = () => {
+    const [theme, setTheme] = useState(null);  // Default state
+
+    useEffect(() => {
+        const fetchMode = async () => {
+            const mode = await getMode();
+            setTheme(mode);  // Update the state with the fetched mode
+        };
+
+        fetchMode();
+    }, []);  // Empty dependency array to run only once on mount
+
+    const toggleTheme = async () => {
+        const newMode = theme === "dark" ? "light" : "dark";  // Toggle the mode
+        setTheme(newMode);
+        await AsyncStorage.setItem('mode', newMode);  // Save the new mode to AsyncStorage
+    };
+
+    return { theme, toggleTheme };
+};
+
 export const offerData = [
     require('../assets/images/offer1.png'),
     require('../assets/images/offer2.png'),
@@ -100,84 +141,203 @@ export const offerData = [
 export const homeData = [
     {
         id: 0,
-        image: require('../assets/images/candleStick.png'),
-        text: 'Candlestick Pattern',
-        list: [
-            {
-                id: 0,
-                title: 'Bullish Pattern',
-                icon: require('../assets/images/bullish.png'),
-                content: [
-                    {
-                        id: 1,
-                        text: "Single-Candlestick Patterns"
-                    },
-                    {
-                        id: 2,
-                        text: "Double Candlestick Pattern"
-                    }
-                ],
-            },
-            {
-                id: 1,
-                title: 'Bearish Pattern',
-                icon: require('../assets/images/bearish.png'),
-                content: [
-                    {
-                        id: 3,
-                        text: "Bearish Single Candlestick Patterns"
-                    },
-                    {
-                        id: 4,
-                        text: "Shooting Star Candlestick",
-                    }
-                ]
-            },
-            {
-                id: 2,
-                title: 'Doji',
-                icon: require('../assets/images/neutral.png'),
-                content: [
-                    {
-                        id: 5,
-                        text: "Gravestone Doji"
-                    },
-                    {
-                        id:6,
-                        text:"Double Candlestick Pattern"
-                    },
-                    {
-                        id:7,
-                        text:"Triple Candlestick Pattern"
-                    }
-                ]
-            }
-        ],
+        image: require('../assets/images/bullish.png'),
+        text: 'What are Candlestick Pattern',
+        description: '(Indicate potential price increases)',
+        tip: 'definition',
     },
     {
         id: 1,
-        image: require('../assets/images/chart.png'),
-        text: 'Chart Pattern'
+        image: require('../assets/images/chart1.png'),
+        text: 'Bullish Candlestick',
+        list: [
+            {
+                id: 0,
+                title: 'Hammer',
+                icon: require('../assets/images/column.png'),
+            },
+            {
+                id: 1,
+                title: 'Inverse Hammer',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 2,
+                title: 'Bullish Engulfing',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 3,
+                title: 'Piercing Line',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 4,
+                title: 'Morning Star',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 5,
+                title: 'Three White Soldiers',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 6,
+                title: 'Bullish Harami',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 7,
+                title: 'Tweezer Bottom',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 8,
+                title: 'Bullish Marubozu',
+                icon: require('../assets/images/chart1.png'),
+            }
+        ]
     },
     {
         id: 2,
-        image: require('../assets/images/money.png'),
-        text: 'Smart Money Concept'
+        image: require('../assets/images/bearish.png'),
+        text: 'Bearish Candlestick',
+        list: [
+            {
+                id: 9,
+                title: 'Hanging Man',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 10,
+                title: 'Shooting Star',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 11,
+                title: 'Bearish Engulfing',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 12,
+                title: 'Evening Star',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 13,
+                title: 'Three Black Crows',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 14,
+                title: 'Bearish Harami',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 15,
+                title: 'Tweezer Top',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 16,
+                title: 'Gravestone Doji',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 17,
+                title: 'Bearish Marubozu',
+                icon: require('../assets/images/chart1.png'),
+            },
+        ]
     },
     {
         id: 3,
-        image: require('../assets/images/volume.png'),
-        text: 'Volume Spread Analysis'
+        image: require('../assets/images/neutral.png'),
+        text: 'Neutral Pattern',
+        list: [
+            {
+                id: 18,
+                title: 'Doji',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 19,
+                title: 'Spinning Top',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 20,
+                title: 'Long-Legged Doji',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 21,
+                title: 'High Wave Candle',
+                icon: require('../assets/images/chart1.png'),
+            },
+        ]
     },
     {
         id: 4,
-        image: require('../assets/images/stock.png'),
-        text: 'Stock'
-    },
-    {
-        id: 5,
-        image: require('../assets/images/crypto.png'),
-        text: 'Crypto'
+        image: require('../assets/images/forex24.png'),
+        text: 'Continuation',
+        list: [
+            {
+                id: 22,
+                title: 'Falling Three Methods (Bearish Continuation)',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 23,
+                title: 'Rising Three Methods (Bullish Continuation)',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 24,
+                title: 'Upside Tasuki Gap (Bullish Continuation)',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 25,
+                title: 'Downside Tasuki Gap (Bearish Continuation)',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 26,
+                title: 'Mat Hold (Bullish Continuation)',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 27,
+                title: 'On-Neck Pattern (Bearish Continuation)',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 28,
+                title: 'In-Neck Pattern (Bearish Continuation)',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 29,
+                title: 'Thrusting Pattern (Bearish Continuation)',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 30,
+                title: 'Separating Lines (Bullish or Bearish Continuation)',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 31,
+                title: 'Side-by-Side White Lines (Bullish Continuation)',
+                icon: require('../assets/images/chart1.png'),
+            },
+            {
+                id: 32,
+                title: 'Side-by-Side Black Lines (Bearish Continuation)',
+                icon: require('../assets/images/chart1.png'),
+            },
+        ]
     }
 ]
 

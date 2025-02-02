@@ -4,12 +4,12 @@ import theme from "../Theme/GlobalTheme";
 
 export default function Bullet(props) {
 
-    const { heading, text, dot } = props;
+    const { heading, text, dot, mode } = props;
 
     return (
         <View style={{ width: '100%', alignItems: 'flex-start', flexDirection: 'row', marginTop: '1%' }}>
-            {dot && <View style={{ height: 10, width: 10, backgroundColor: theme.colors.black, borderRadius: 30, marginTop: '3%' }} />}
-            <Text style={{ fontSize: 16, color: theme.colors.black, paddingLeft: '2%', width:'100%' }}><Text style={styles.subHeading}>{heading}</Text> {text}</Text>
+            {dot && <View style={{ height: 10, width: 10, backgroundColor: mode === 'dark' ? theme.colors.white : theme.colors.black, borderRadius: 30, marginTop: '3%' }} />}
+            <Text style={{ fontSize: 16, color: mode === 'dark' ? theme.colors.white : theme.colors.black, paddingLeft: '2%', width: '100%' }}><Text style={[styles.subHeading,{ color: mode === 'dark' ? theme.colors.white : theme.colors.black }]}>{heading}</Text> {text}</Text>
         </View>
     )
 }
@@ -17,7 +17,6 @@ export default function Bullet(props) {
 
 const styles = StyleSheet.create({
     subHeading: {
-        color: theme.colors.black,
         fontSize: 18,
         fontFamily: 'Gilroy-SemiBold',
         textAlign: 'left',

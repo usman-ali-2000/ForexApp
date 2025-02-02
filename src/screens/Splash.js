@@ -16,7 +16,7 @@ export default function Splash() {
             // const generatedId = await AsyncStorage.getItem("generatedId");
             // console.log('id:', generatedId);
             // if (id) {
-                navigation.replace('ForexHome');
+                navigation.replace('Drawer');
             // } else {
             //     navigation.replace("Login");
             // }

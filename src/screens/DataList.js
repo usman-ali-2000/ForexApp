@@ -4,21 +4,27 @@ import theme from "../Theme/GlobalTheme";
 import { homeData } from "../assets/Data";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Collapsible1 from "../components/Collapsible";
+import { Definition } from "../assets/BlogsData";
 
 export default function DataList({ navigation, route }) {
 
     const id = route?.params?.id;
+    const mode = route?.params?.mode;
 
     const [heading, setHeading] = useState('');
+    const [tip, setTip] = useState(false);
     const [listData, setListData] = useState([]);
 
     const fetchData = () => {
         const data = homeData.find((item) => item.id === id);
         setHeading(data.text);
         console.log(data);
+        if (data.tip) {
+            setTip(true);
+        }
         if (data.list) {
             setListData(data.list);
-            console.log('data:', data.list);
+            console.log('data:', data.list, data);
         }
     }
 
@@ -34,29 +40,28 @@ export default function DataList({ navigation, route }) {
                 </TouchableOpacity>
                 <Text style={styles.text} ellipsizeMode="tail" numberOfLines={1}>{heading}</Text>
             </View>
-            <View style={{ width: '100%', marginTop: "2%", alignItems: 'center', paddingBottom: '5%' }}>
-                <FlatList
-                    style={{ width: '90%' }}
+            <View style={{ width: '100%', paddingTop: "2%", alignItems: 'center', flex: 1, paddingBottom: '2%', backgroundColor: mode === 'dark' ? theme.colors.black : theme.colors.white }}>
+                {tip ? (
+                    <View style={{ width: '100%', alignItems: 'center', backgroundColor: mode === 'dark' ? theme.colors.black : theme.colors.white, flex: 1 }}>
+                        <Definition mode={mode}/>
+                    </View>
+                ) : (<FlatList
+                    style={{ width: '90%', }}
                     data={listData}
+                    showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => (
                         <Collapsible1
                             icon={item.icon}
                             text={item.title}
-                            content={item?.content}
-                            indexId={index}
-                            passid={item.id}
-                            mainIndex={id}
+                            mode={mode}
+                            // content={item?.content}
+                            // indexId={index}
+                            // passid={item.id}
+                            // mainIndex={id}
+                            onPress={() => navigation.navigate('Blog', { mainIndex: id, index: index, id: item.id, heading: item.title, mode: mode })}
                         />
-                        // <TouchableOpacity onPress={() => navigation.navigate('Blog', { index: id, id: item.id })} style={{ width: '100%', borderRadius: 10, backgroundColor: theme.colors.white, marginTop: '5%', elevation: 5, alignItems: 'center', flexDirection: 'row', padding: '5%' }}>
-                        //     <Image source={item.icon} style={{ height: 40, width: 40 }} />
-                        //     <View style={{ width: '80%' }}>
-                        //         {/* <Text style={{ color: theme.colors.darkRed, width: '100%', fontSize: 16, fontFamily: 'Gilroy-Bold', marginTop: 5, lineHeight: 15, paddingLeft: '5%' }}>{item.title}</Text> */}
-                        //         <Collapsible1/>
-                        //         {/* <Text style={{ color: theme.colors.black, width: '100%', fontSize: 12, fontFamily: 'Gilroy-SemiBold', marginTop: 2, lineHeight: 15, paddingLeft: '5%' }} numberOfLines={2}>{item.description}</Text> */}
-                        //     </View>
-                        // </TouchableOpacity>
                     )}
-                />
+                />)}
             </View>
         </View>
     )

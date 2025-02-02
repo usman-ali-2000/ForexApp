@@ -10,7 +10,7 @@ const { width, height } = Dimensions.get('window');
 export default function Collapsible1(props) {
     const navigation = useNavigation();
 
-    const { text, content, onSelect, icon, indexId, passid, mainIndex } = props;
+    const { text, content, onSelect, icon, indexId, passid, mainIndex, onPress } = props;
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [selected, setSelected] = useState('');
 
@@ -26,27 +26,25 @@ export default function Collapsible1(props) {
         }
     };
 
-    useEffect(()=>{
-        console.log('text:', indexId, passid );
-    },[])
+    useEffect(() => {
+        console.log('text:', indexId, passid);
+    }, [])
 
     return (
         <View style={{ width: '100%', alignItems: 'center' }}>
-            <View style={{ width: '100%', borderRadius: 10, backgroundColor: theme.colors.white, marginTop: '5%', elevation: 5, alignItems: 'center', flexDirection: 'row', padding: '5%' }}>
+            <TouchableOpacity onPress={content ? toggleCollapsed : onPress} style={{ width: '100%', borderRadius: 10, backgroundColor: props.mode === 'dark' ? theme.colors.black : theme.colors.white, marginTop: '5%', elevation: 5, alignItems: 'center', flexDirection: 'row', padding: '5%' }}>
                 <Image source={icon} style={{ height: 40, width: 40 }} />
-                <TouchableOpacity onPress={toggleCollapsed} style={styles.ButtonContainer}>
                     <Text style={styles.dropDownText}>{text}</Text>
-                </TouchableOpacity>
-            </View>
-            {content && (<Collapsible collapsed={isCollapsed}>
+            </TouchableOpacity>
+            {/* {content && (<Collapsible collapsed={isCollapsed}>
                 <View style={styles.content}>
                     {content?.map((item, index) => (
-                        <TouchableOpacity key={index} onPress={() => navigation.navigate('Blog', { mainIndex:mainIndex, index: indexId, id: passid, select: item.id })}>
+                        <TouchableOpacity key={index} onPress={() => navigation.navigate('Blog', { mainIndex: mainIndex, index: indexId, id: passid, select: item.id })}>
                             <Text key={index} style={styles.itemText}>{item.text}</Text>
                         </TouchableOpacity>
                     ))}
                 </View>
-            </Collapsible>)}
+            </Collapsible>)} */}
         </View>
     );
 }
