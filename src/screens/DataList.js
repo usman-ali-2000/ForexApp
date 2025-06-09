@@ -5,6 +5,7 @@ import { homeData } from "../assets/Data";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Collapsible1 from "../components/Collapsible";
 import { Definition } from "../assets/BlogsData";
+import { useInterstitialAd } from "../components/Intersitial";
 
 export default function DataList({ navigation, route }) {
 
@@ -28,6 +29,19 @@ export default function DataList({ navigation, route }) {
         }
     }
 
+    // At the top of the component
+    const { showAd, loaded } = useInterstitialAd();
+
+    // Inside useEffect
+    useEffect(() => {
+        fetchData();
+
+        // Optional: Show ad on screen load if loaded
+        if (loaded) {
+            showAd();
+        }
+    }, [loaded]);
+
     useEffect(() => {
         fetchData();
     }, [])
@@ -43,10 +57,11 @@ export default function DataList({ navigation, route }) {
             <View style={{ width: '100%', paddingTop: "2%", alignItems: 'center', flex: 1, paddingBottom: '2%', backgroundColor: mode === 'dark' ? theme.colors.black : theme.colors.white }}>
                 {tip ? (
                     <View style={{ width: '100%', alignItems: 'center', backgroundColor: mode === 'dark' ? theme.colors.black : theme.colors.white, flex: 1 }}>
-                        <Definition mode={mode}/>
+                        <Definition mode={mode} />
                     </View>
                 ) : (<FlatList
-                    style={{ width: '90%', }}
+                    style={{ width: '90%' }}
+                    contentContainerStyle={{ paddingBottom: '10%' }}
                     data={listData}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => (

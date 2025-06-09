@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { homeData } from "../assets/Data";
 import Icon from "react-native-vector-icons/FontAwesome";
 import theme from "../Theme/GlobalTheme";
@@ -99,11 +99,11 @@ export default function Blog({ navigation, route }) {
                 </View>
             </ScrollView>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '90%', zIndex: 2, position: 'absolute', top: height * 0.9 }}>
-                <TouchableOpacity onPress={handlePrev} style={{ backgroundColor: theme.colors.darkRed, height: 60, width: 60, borderRadius: 30, alignItems: 'center', alignItems: 'center', justifyContent: 'center', }}>
-                    <Text style={{ color: theme.colors.white, fontSize: 12, fontFamily: 'Gilroy-Bold' }}>Prev</Text>
+                <TouchableOpacity onPress={handlePrev} style={{ alignItems: 'center', alignItems: 'center', justifyContent: 'center', }}>
+                    <Image style={{ color: theme.colors.white, height: 30, width: 30 }} source={require('../assets/images/left-arrow.png')} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleNext} style={{ backgroundColor: theme.colors.darkRed, height: 60, width: 60, borderRadius: 30, alignItems: 'center', alignItems: 'center', justifyContent: 'center', }}>
-                    <Text style={{ color: theme.colors.white, fontSize: 12, fontFamily: 'Gilroy-Bold' }}>Next</Text>
+                <TouchableOpacity onPress={handleNext} style={{ alignItems: 'center', alignItems: 'center', justifyContent: 'center', }}>
+                    <Image style={{ color: theme.colors.white, height: 30, width: 30, transform: [{ scaleX: -1 }] }} source={require('../assets/images/left-arrow.png')} />
                 </TouchableOpacity>
             </View>
         </View>

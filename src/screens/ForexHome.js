@@ -7,6 +7,7 @@ import { homeData } from "../assets/Data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import CustomToggleButton from "../components/customeToggleButton";
+import { useInterstitialAd } from "../components/Intersitial";
 
 const { height, width } = Dimensions.get('window');
 
@@ -54,19 +55,29 @@ export default function ForexHome({ navigation }) {
         }
     };
 
+    const { showAd, loaded } = useInterstitialAd();
+
+    const handleClick = (item) => {
+        if (loaded) {
+            showAd();
+        }
+
+        navigation.navigate('DataList', { id: item.id, mode: mode })
+    }
+
 
     return (
         <View style={[styles.container, { backgroundColor: mode === 'dark' ? theme.colors.black : theme.colors.white }]}>
             <View style={styles.header}>
                 <Svg
-                    height="60" // Height of the curve
-                    width={width} // Matches screen width
-                    viewBox={`0 0 ${width} 60`} // Adjust width dynamically
+                    height={width * 0.15}
+                    width={width}
+                    viewBox={`0 0 ${width} ${width * 0.15}`}
                     style={styles.svgStyle}
                 >
                     <Path
-                        fill={mode === 'dark' ? theme.colors.black : theme.colors.white} // Match header color
-                        d={`M0,0 Q${width / 2},60 ${width},0 V60 H0 Z`}
+                        fill={mode === 'dark' ? theme.colors.black : theme.colors.white}
+                        d={`M0,0 Q${width / 2},${width * 0.15} ${width},0 V${width * 0.15} H0 Z`}
                     />
                 </Svg>
                 <View style={styles.headerContent}>
@@ -88,7 +99,7 @@ export default function ForexHome({ navigation }) {
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) => (
                         <TouchableOpacity
-                            onPress={() => navigation.navigate('DataList', { id: item.id, mode: mode })}
+                            onPress={() => { handleClick(item) }}
                             style={[styles.card, { backgroundColor: mode === 'dark' ? theme.colors.black : theme.colors.white }]}>
                             <Image source={item.image} style={styles.image} />
                             <View style={{ width: '70%', marginLeft: '5%' }}>
